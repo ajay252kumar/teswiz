@@ -579,18 +579,14 @@ class BrowserDriverManager {
         shouldBrowserBeMaximized = browserConfigForBrowserType.getBoolean(MAXIMIZE);
 
         WebDriverManager webDriverManager = WebDriverManager.chromedriver()
-                                                    //.clearDriverCache()
+                                                    .clearDriverCache()
                                                     .driverVersion(getOverriddenStringValue(BROWSER_VERSION,browserConfigForBrowserType.getString("browserVersion")));
         String proxyUrl = Runner.getProxyURL();
         if (null != proxyUrl) {
             LOGGER.info(String.format("Adding proxy: %s to WebDriverManager", proxyUrl));
             webDriverManager = webDriverManager.proxy(String.valueOf(new Proxy().setHttpProxy(proxyUrl)));
         }
-        LOGGER.error(webDriverManager);
-        LOGGER.error(getOverriddenStringValue(BROWSER_VERSION,browserConfigForBrowserType.getString("browserVersion")));
-        LOGGER.error( browserConfigForBrowserType.getString("browserVersion"));
-
-        webDriverManager.setup();
+        webDriverManager.chromedriver().arch32().clearDriverCache().setup();
 
         WebDriver driver = Runner.isRunningInCI() ? createRemoteWebDriver(chromeOptions)
                 : new ChromeDriver(chromeOptions);
