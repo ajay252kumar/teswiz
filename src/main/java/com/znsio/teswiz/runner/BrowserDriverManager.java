@@ -65,7 +65,10 @@ class BrowserDriverManager {
         LOGGER.debug("BrowserDriverManager - private constructor");
     }
 
-    @NotNull
+    static {         // Enable SSL debugging
+        System.setProperty("javax.net.debug", "all");
+    }
+        @NotNull
     static Driver createWebDriverForUser(String userPersona, String browserName,
                                          Platform forPlatform, TestExecutionContext context) {
         LOGGER.info(String.format(
@@ -579,7 +582,6 @@ class BrowserDriverManager {
         shouldBrowserBeMaximized = browserConfigForBrowserType.getBoolean(MAXIMIZE);
 
         WebDriverManager webDriverManager = WebDriverManager.chromedriver()
-                                                    .arch32()
                                                     .clearDriverCache()
                                                     .driverVersion(getOverriddenStringValue(BROWSER_VERSION,browserConfigForBrowserType.getString("browserVersion")));
         String proxyUrl = Runner.getProxyURL();
